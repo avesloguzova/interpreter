@@ -43,6 +43,16 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
       "()()"
     )
 
+  val expressions =
+    Table(
+      "sexpressions",
+      Number(100),
+      Atom("abc"),
+      Atom("->"),
+      List(Seq(Number(1))),
+      List(Seq.empty)
+    )
+
   property("Parser result should not return None on correct input") {
     forAll(numbers)(shouldNotBeEmpty)
     forAll(atoms)(shouldNotBeEmpty)
@@ -52,6 +62,12 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
   property("Result should be empty on wrong input") {
     forAll(wrongInputs) { input =>
       Parser.parse(input) shouldBe empty
+    }
+  }
+
+  property("toString . parse = id") {
+    forAll(expressions) { expr =>
+      Parser.parse(expr.toString).get should be equals expr
     }
   }
 
