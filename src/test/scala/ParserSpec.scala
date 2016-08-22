@@ -33,10 +33,26 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
       "( 10    )"
     )
 
+  val wrongInputs =
+    Table(
+      "errors",
+      "(",
+      ")",
+      "a b",
+      "92 (",
+      "()()"
+    )
+
   property("Parser result should not return None on correct input") {
     forAll(numbers)(shouldNotBeEmpty)
     forAll(atoms)(shouldNotBeEmpty)
     forAll(lists)(shouldNotBeEmpty)
+  }
+
+  property("Result should be empty on wrong input") {
+    forAll(wrongInputs) { input =>
+      Parser.parse(input) shouldBe empty
+    }
   }
 
   def shouldNotBeEmpty(input: String): Unit = {
