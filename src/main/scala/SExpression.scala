@@ -9,7 +9,7 @@ case class Atom(value: String) extends SExpression {
 }
 
 case class List(value: Seq[SExpression]) extends SExpression {
-  override def toString: String = value.mkString("(", ",", ")")
+  override def toString: String = value.mkString("(", " ", ")")
 }
 
 
