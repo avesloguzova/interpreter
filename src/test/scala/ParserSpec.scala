@@ -29,7 +29,7 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
       "(1)",
       "(1 2 ->)",
       "(    )",
-      "((   ))",
+      "(( ))",
       "( 10    )"
     )
 
@@ -49,8 +49,12 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
       Number(100),
       Atom("abc"),
       Atom("->"),
-      List(Seq(Number(1))),
-      List(Seq.empty)
+      List.empty,
+      List(1),
+      List(1, 2),
+      List(List.empty),
+      List(List(List.empty)),
+      List(List(List(List.empty)))
     )
 
   property("Parser result should not return None on correct input") {
@@ -65,8 +69,8 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
     }
   }
 
-  property("toString . parse = id") {
-    forAll(expressions) { expr =>
+  property("parse . toString = id") {
+    forAll(expressions) { expr: SExpression =>
       Parser.parse(expr.toString).get should be equals expr
     }
   }
@@ -74,7 +78,8 @@ class ParserSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
   def shouldNotBeEmpty(input: String): Unit = {
     Parser.parse(input) should not be empty
   }
+
+  private implicit def intToNumber(int: Int): SExpression = Number(int)
+
+  private implicit def strToAtom(str: String): SExpression = Atom(str)
 }
-
-
-
