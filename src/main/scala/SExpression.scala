@@ -12,5 +12,9 @@ case class List(value: Seq[SExpression]) extends SExpression {
   override def toString: String = value.mkString("(", " ", ")")
 }
 
+object List {
+  def empty = new List(Seq.empty)
 
+  def apply(head: SExpression, elements: SExpression*): List = new List(head +: elements)
+}
 
